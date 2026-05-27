@@ -49,10 +49,11 @@ if not st.session_state.authenticated:
 
 # --- 3. SECURE DATABASE CONNECTION (Cloud Optimized) ---
 # --- 3. SECURE DATABASE CONNECTION (Platform Secrets Only) ---
+# --- 3. SECURE DATABASE CONNECTION (Platform Secrets Only) ---
 if 'db' not in st.session_state:
     scope = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
     try:
-        # Yeh public code mein bilkul safe hai kyunki yeh platform se check karega
+        # Yeh safe line hai kyunki yeh direct platform se check karega
         creds_dict = dict(st.secrets["gcp_service_account"])
         creds = Credentials.from_service_account_info(creds_dict, scopes=scope)
         client = gspread.authorize(creds)
