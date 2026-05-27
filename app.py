@@ -50,11 +50,23 @@ if not st.session_state.authenticated:
 # --- 3. SECURE DATABASE CONNECTION (Cloud Optimized) ---
 # --- 3. SECURE DATABASE CONNECTION (Platform Secrets Only) ---
 # --- 3. SECURE DATABASE CONNECTION (Platform Secrets Only) ---
+# --- 3. SECURE DATABASE CONNECTION (Platform Individual Secrets) ---
 if 'db' not in st.session_state:
     scope = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
     try:
-        # Yeh safe line hai kyunki yeh direct platform se check karega
-        creds_dict = dict(st.secrets["gcp_service_account"])
+        # Portal se individual teen safe strings call ho rahi hain
+        creds_dict = {
+            "type": "service_account",
+            "project_id": st.secrets["project_id"],
+            "private_key_id": "1d415e2b7e80c6b8f2b6ab01c41b76aa2e9330ca",
+            "private_key": st.secrets["private_key"].replace('\\n', '\n'),
+            "client_email": st.secrets["client_email"],
+            "client_id": "105434175511121227484",
+            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+            "token_uri": "https://oauth2.googleapis.com/token",
+            "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+            "client_x509_cert_url": f"https://www.googleapis.com/robot/v1/metadata/x509/{st.secrets['client_email']}"
+        }
         creds = Credentials.from_service_account_info(creds_dict, scopes=scope)
         client = gspread.authorize(creds)
         st.session_state.db = client.open("Mihir_Fabrication_DB") 
